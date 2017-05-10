@@ -39,6 +39,23 @@ const elemWithProperty = (arrayOfObjects, propertyName, match) => {
   return undefined;
 };
 
+const downloadArchive = (jsonString) => {
+  download('save.json', jsonString);
+}
+
+const download = (filename, text) => {
+  var element = document.createElement('a');
+  element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+  element.setAttribute('download', filename);
+
+  element.style.display = 'none';
+  document.body.appendChild(element);
+
+  element.click();
+
+  document.body.removeChild(element);
+}
+
 // ---------------------------------------------------------------
 // WORLD INTERACTION
 // ---------------------------------------------------------------
@@ -145,6 +162,10 @@ const initSockets = () => {
     socket.on('view', (data) => {
       viewData(data);
     });
+    
+    socket.on('archive', (data) => {
+      downloadArchive(data);
+    });
 };
 
 // ---------------------------------------------------------------
@@ -166,6 +187,7 @@ const initButtons = () => {
   q('.back').onclick = () => { goBack(); }
   q('.edit').onclick = () => { editDescription(); }
   q('.delete').onclick = () => { deleteEntity(); }
+  q('.archive').onclick = () => { socket.emit('archive'); }
 }
 
 const initPage = () => {

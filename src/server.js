@@ -288,6 +288,11 @@ io.sockets.on('connection', (socket) => {
     emitEntity(socket,getParentPath(data.path));
   });
   
+  socket.on('archive', (data) => {
+    console.log('archive');
+    socket.emit('archive', JSON.stringify(rt));
+  });
+  
   socket.on('disconnect', () => {
     console.log(socket.name + " disconnected");
   });
