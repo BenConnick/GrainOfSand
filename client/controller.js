@@ -193,7 +193,7 @@ const initButtons = () => {
   q('.back').onclick = () => { goBack(); }
   q('.edit').onclick = () => { editDescription(); }
   q('.delete').onclick = () => { deleteEntity(); }
-  q('.archive').onclick = () => { socket.emit('archive'); }
+  //q('.archive').onclick = () => { socket.emit('archive'); }
 }
 
 const initPage = () => {
