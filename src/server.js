@@ -27,6 +27,8 @@ const http = require('http').Server(app);
 const socketio = require('socket.io');
 const url = require('url');
 const path = require('path');
+const mongo = require('mongodb').MongoClient;
+const assert = require('assert');
 
 const port = process.env.PORT || process.env.NODE_PORT || 3000;
 
@@ -35,6 +37,61 @@ http.listen(port, '0.0.0.0', 511, () => {
   console.log(`listening on *: ${port}`);
   // console.log(`Listening on 127.0.0.1: ${port}`);
 });
+
+const url2 = "mongodb://BenConnick:$4Mango@grainofsanddb-shard-00-00-hnyhc.mongodb.net:27017,grainofsanddb-shard-00-01-hnyhc.mongodb.net:27017,grainofsanddb-shard-00-02-hnyhc.mongodb.net:27017/<DATABASE>?ssl=true&replicaSet=GrainOfSandDB-shard-0&authSource=admin";
+
+// save to db test
+mongo.connect(url2, function(err, db) {
+  assert.equal(null, err);
+  console.log("Connected correctly to server.");
+  findSave(db, () => {
+      db.close();
+  });
+});
+
+// delete the entire database!!!
+const removeAll = (db, callback) => {
+   db.collection('saves').deleteMany(
+      {},
+      function(err, results) {
+         console.log(results);
+         callback();
+      }
+   );
+};
+
+// create a new save entry
+const insertSave = (db, callback) => {
+   db.collection('saves').insertOne( rt, function(err, result) {
+    assert.equal(err, null);
+    //console.log("Inserted a document into the saves collection.");
+    callback();
+  });
+};
+
+// read the save entry
+const findSave = (db, callback) => {
+   var cursor =db.collection('saves').find( );
+   cursor.each(function(err, doc) {
+      //console.log("" + cursor.cursorState.documents.length + " db entries found");
+      assert.equal(err, null);
+      if (doc != null) {
+         //console.dir(doc);
+         callback(doc);
+      } else {
+         callback();
+      }
+   });
+};
+
+const updateSave = (db, callback) => {
+   db.collection('saves').replaceOne(
+      {}, rt, 
+      function(err, results) {
+        //console.log(results);
+        callback();
+   });
+};
 
 // FILE SERVING HANDLED BY EXPRESS
 
@@ -147,24 +204,41 @@ const emitUpdate = () => {
 */
 
 const loadGame = () => {
-  fs.readFile('save.json', 'utf8', function(err, data) {
+  /*fs.readFile('save.json', 'utf8', function(err, data) {
     if(err) {
         console.error("Could not open file: %s", err);
         return;
     }
     rt = JSON.parse(data);
+  });*/
+  mongo.connect(url2, function(err, db) {
+    assert.equal(null, err);
+    console.log("Load: Connected correctly to server.");
+    findSave(db, (doc) => {
+      if (doc) {
+        rt = doc;
+      }
+      db.close();
+    });
   });
 }
 loadGame();
 
 const saveGame = () => {
-  const data = JSON.stringify(rt);
-  fs.writeFile('save.json', data, function(err) {
+  //const data = JSON.stringify(rt);
+  /*fs.writeFile('save.json', data, function(err) {
       if(err) {
           console.error("Could not write file: %s", err);
           return;
       }
-      
+  });*/
+  mongo.connect(url2, function(err, db) {
+    assert.equal(null, err);
+    console.log("Save: Connected correctly to server.");
+    updateSave(db, () => {
+      // callback
+      db.close()
+    });
   });
 }
 

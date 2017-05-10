@@ -111,6 +111,10 @@ const pathToBreadcrumbs = (path) => {
 
 // show an entity
 const viewData = (data) => {
+  if (data._name === undefined) {
+    console.log(data);
+    return;
+  }
   entityContainer.innerHTML = '';
   nameEl.innerHTML = presentify(data._name);
   descEl.innerHTML = data._desc;
@@ -119,6 +123,8 @@ const viewData = (data) => {
   for (let i=0; i<eNames.length; i++) {
     // ignore private properties
     if (eNames[i][0] === '_') continue;
+    // ignore mongo auto property
+    if (eNames[i] === 'lastModified') continue;
     // create a button for each 
     makeEntityButton(eNames[i]);
   }
