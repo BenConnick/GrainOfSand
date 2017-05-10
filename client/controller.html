@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" type="text/css" href="style.css">
+	  <script src="/socket.io/socket.io.js"></script>
+    <!--<script src="https://npmcdn.com/babel-core@5.8.38/browser.min.js"></script>-->
+    <script type="text/javascript" src="controller.js"></script> 
+
+    <title>Universe</title>
+</head>
+<body>
+  <div class="controller">
+     <button class='back'><- Back</button>
+     <h1 class="name">Not connected</h1>
+     <p class="description">
+      Something has gone wrong. Waiting for connection from server...
+     </p>
+     <div class="entityContainer">
+     </div>
+     <br>
+     <hr>
+     <form class="creator container" id="loginContainer">
+     <p class="inputLabel">Name: </p><input class="nameInput"></input><br>
+     <p class="inputLabel">Description: </p><input class="descriptionInput" type="textarea"></input><br>
+     <input type="submit" class="submit" value="Create">
+     <button class="edit">Edit</button><button class="delete">Delete</button>
+     </form>
+  </div>
+</body>
+</html>

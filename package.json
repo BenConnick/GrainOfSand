@@ -1,0 +1,27 @@
+{
+  "name": "folderquest",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "nodemon": "nodemon --watch ./src ./src/server.js",
+    "start": "node ./src/server.js",
+    "pretest": "eslint ./src --fix",
+    "test": "echo \"Tests complete\"",
+    "doThing": "eslint --init"
+  },
+  "author": "Benjamin Connick",
+  "license": "UNLICENSED",
+  "devDependencies": {
+    "eslint": "^3.16.0",
+    "eslint-config-airbnb": "^14.1.0",
+    "eslint-config-airbnb-base": "^11.1.0",
+    "eslint-plugin-import": "^2.2.0",
+    "nodemon": "^1.11.0",
+    "socket.io": "^1.7.4"
+  },
+  "dependencies": {
+    "socket.io": "^1.7.3",
+    "express": "^4.15.2"
+  }
+}
