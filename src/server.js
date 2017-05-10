@@ -38,7 +38,7 @@ http.listen(port, '0.0.0.0', 511, () => {
   // console.log(`Listening on 127.0.0.1: ${port}`);
 });
 
-const url2 = "mongodb://BenConnick:$4Mango@grainofsanddb-shard-00-00-hnyhc.mongodb.net:27017,grainofsanddb-shard-00-01-hnyhc.mongodb.net:27017,grainofsanddb-shard-00-02-hnyhc.mongodb.net:27017/<DATABASE>?ssl=true&replicaSet=GrainOfSandDB-shard-0&authSource=admin";
+const url2 = "mongodb://BenConnick:$4Mango@grainofsanddb-shard-00-00-hnyhc.mongodb.net:27017,grainofsanddb-shard-00-01-hnyhc.mongodb.net:27017,grainofsanddb-shard-00-02-hnyhc.mongodb.net:27017/GrainOfSandDB?ssl=true&replicaSet=GrainOfSandDB-shard-0&authSource=admin";
 
 // save to db test
 mongo.connect(url2, function(err, db) {
