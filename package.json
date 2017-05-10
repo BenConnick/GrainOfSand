@@ -17,6 +17,6 @@
   "dependencies": {
     "socket.io": "^1.7.3",
     "express": "^4.15.2",
-    "mongodb": "2.2.0"
+    "mongodb": "^2.2.26"
   }
 }
