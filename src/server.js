@@ -179,9 +179,17 @@ const getEntity = (path) => {
   return e;
 }
 
+const getParentPath = (path) => {
+  if (path.indexOf('/') < 0) return;
+  // parent substring
+  const sub = path.substring(0,path.lastIndexOf('/'));
+  // get parent
+  return sub;
+}
+
 const getParent = (path) => {
-  return getEntity(path)._prnt;
-  }
+  return getEntity(getParentPath(path));
+}
 
 const createEntity = (path, name, description) => {
   getEntity(path)[name] = { 
@@ -210,9 +218,18 @@ const emitEntity = (socket,path) => {
   socket.emit('view',obj);
 }
 
-const editDescription = (name, path, description) => {
+const editDescription = (path, description) => {
   const e = getEntity(path);
-  //e._desc = 
+  e._desc = description;
+}
+
+const deleteEntity = (path, name) => {
+  console.log("delete "+name);
+  const e = getParent(path);
+  if (e === undefined) return;
+  // delete the reference
+  e[name] = undefined;
+  delete(e[name]);
 }
 
 /*
@@ -256,15 +273,19 @@ io.sockets.on('connection', (socket) => {
   socket.on('viewEntity', (data) => {
     console.log(`view ${data.name}`);
     emitEntity(socket,data.path);
+    loadGame();
   });
   
   socket.on('edit', (data) => {
-    editDescription(data.path,data.name);
+    editDescription(data.path,data.description);
+    saveGame();
     emitEntity(socket,data.path);
   });
   
   socket.on('delete', (data) => {
     deleteEntity(data.path,data.name);
+    saveGame();
+    emitEntity(socket,getParentPath(data.path));
   });
   
   socket.on('disconnect', () => {

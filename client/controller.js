@@ -2,6 +2,7 @@
 
 let socket;
 let debug = true;
+let pathEl;
 let nameEl;
 let descEl;
 let entityContainer;
@@ -9,6 +10,7 @@ let _path = '';
 let form;
 let nameInput;
 let descriptionInput;
+let buttons;
 
 // ---------------------------------------------------------------
 // HELPERS
@@ -56,6 +58,19 @@ const goBack = () => {
   viewEntity(parent);
 }
 
+const editDescription = () => {
+  socket.emit('edit', { 
+    "path": _path, 
+    "description": descriptionInput.value 
+    } );
+}
+
+const deleteEntity = () => {
+  if (confirm("Are you sure you want to delete "+nameEl.innerHTML+" and all of its children?")) {
+    socket.emit('delete', { "path": _path, "name": nameEl.innerHTML });
+  }
+}
+
 // show an entity
 const viewEntity = (name) => {
   socket.emit('viewEntity',{'path': _path, 'name': name});
@@ -69,7 +84,12 @@ const makeEntityButton = (name) => {
     _path = _path + '/' + name;
     viewEntity(name); 
   };
+  buttons.push(b);
   entityContainer.appendChild(b);
+}
+
+const pathToBreadcrumbs = (path) => {
+  return path.replace(new RegExp('/','g'),' > ');
 }
 
 // show an entity
@@ -78,6 +98,7 @@ const viewData = (data) => {
   nameEl.innerHTML = presentify(data._name);
   descEl.innerHTML = data._desc;
   const eNames = Object.keys(data);
+  buttons = [];
   for (let i=0; i<eNames.length; i++) {
     // ignore private properties
     if (eNames[i][0] === '_') continue;
@@ -86,11 +107,13 @@ const viewData = (data) => {
   }
   // move path
   _path = data._path;
+  pathEl.innerHTML = pathToBreadcrumbs(_path);
 }
 
 // remove illegal property characters
 const sanitize = (str) => {
   let safe = str.replace(new RegExp(' ','g'),'_');
+  safe = safe.replace(new RegExp('/','g'),'');
   return safe;
 }
 
@@ -102,6 +125,7 @@ const presentify = (str) => {
 
 // create an entity
 const createEntity = (name, desc) => {
+  if (name.length == 0) return;
   socket.emit('createEntity', {
     'name': sanitize(name),
     'path': _path,
@@ -131,20 +155,27 @@ const initForm = () => {
   nameInput = q('.nameInput');
   descriptionInput = q('.descriptionInput');
   form.onsubmit = () => {
-    console.log(`${nameInput.value}, ${descriptionInput.value}`);
+    //log(`${nameInput.value}, ${descriptionInput.value}`);
     // create entity
     createEntity(nameInput.value, descriptionInput.value);
     return false;
   }
 }
 
+const initButtons = () => {
+  q('.back').onclick = () => { goBack(); }
+  q('.edit').onclick = () => { editDescription(); }
+  q('.delete').onclick = () => { deleteEntity(); }
+}
+
 const initPage = () => {
   nameEl = q(".name");
   descEl = q(".description");
   entityContainer = q(".entityContainer");
-  q('.back').onclick = () => { goBack(); }
+  pathEl = q(".path");
   form = q('form');
   initForm();
+  initButtons();
 };
 
 const keyEvents = () => {
@@ -160,8 +191,24 @@ const keyEvents = () => {
         e.preventDefault();
         goBack();
         break;
-      case 192:
+      // apostrophe 
+      case 96:
         goBack();
+        break;
+      // backtick ("grave accent") key
+      case 49:
+      case 50:
+      case 51:
+      case 52:
+      case 53:
+      case 54:
+      case 55:
+      case 56:
+      case 57:  
+        let num = e.which - 49;
+        if (num < buttons.length) {
+          buttons[num].click();
+        }
         break;
       }
     }

@@ -11,6 +11,7 @@
 <body>
   <div class="controller">
      <button class='back'><- Back</button>
+     <p class="path"></p>
      <h1 class="name">Not connected</h1>
      <p class="description">
       Something has gone wrong. Waiting for connection from server...
@@ -22,9 +23,10 @@
      <form class="creator container" id="loginContainer">
      <p class="inputLabel">Name: </p><input class="nameInput"></input><br>
      <p class="inputLabel">Description: </p><input class="descriptionInput" type="textarea"></input><br>
-     <input type="submit" class="submit" value="Create">
-     <button class="edit">Edit</button><button class="delete">Delete</button>
+     <input type="submit" class="submit" value="Create"></input>
      </form>
+     <button class="edit">Edit</button><button class="delete">Delete</button>
+     <p>Keyboard shortcuts: [`] to go back up, [1-9] to go deeper</p>
   </div>
 </body>
 </html>
