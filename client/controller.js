@@ -117,7 +117,7 @@ const viewData = (data) => {
   }
   entityContainer.innerHTML = '';
   nameEl.innerHTML = presentify(data._name);
-  descEl.innerHTML = data._desc;
+  descEl.innerHTML = presentify(data._desc);
   const eNames = Object.keys(data);
   buttons = [];
   for (let i=0; i<eNames.length; i++) {
@@ -137,12 +137,14 @@ const viewData = (data) => {
 const sanitize = (str) => {
   let safe = str.replace(new RegExp(' ','g'),'_');
   safe = safe.replace(new RegExp('/','g'),'');
+  safe = safe.replace(new RegExp('.','g'),'[period]');
   return safe;
 }
 
 // add spaces back in
 const presentify = (str) => {
   let newStr = str.replace(new RegExp('_','g'),' ');
+  newStr = newStr.replace(/\[period\]/g,'.');
   return newStr;
 }
 

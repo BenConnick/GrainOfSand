@@ -73,7 +73,7 @@ const insertSave = (db, callback) => {
 const findSave = (db, callback) => {
    var cursor =db.collection('saves').find( );
    cursor.each(function(err, doc) {
-      //console.log("" + cursor.cursorState.documents.length + " db entries found");
+      console.log("" + cursor.cursorState.documents.length + " db entries found");
       assert.equal(err, null);
       if (doc != null) {
          //console.dir(doc);
@@ -216,6 +216,7 @@ const loadGame = () => {
     console.log("Load: Connected correctly to server.");
     findSave(db, (doc) => {
       if (doc) {
+        console.log("doc found");
         rt = doc;
       }
       db.close();
@@ -223,6 +224,22 @@ const loadGame = () => {
   });
 }
 loadGame();
+
+
+/*
+// Clear all data and insert data from backup
+mongo.connect(url2, function(err, db) {
+  assert.equal(null, err);
+  console.log(err);
+  console.log("Connected correctly to server.");
+  removeAll(db, () => {
+    console.log("save deleted")
+    insertSave(db, () => {
+      console.log("new save inserted");
+      db.close();
+    });
+  });
+});*/
 
 const saveGame = () => {
   //const data = JSON.stringify(rt);
