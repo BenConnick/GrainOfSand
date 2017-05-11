@@ -84,7 +84,7 @@ const editDescription = () => {
 
 const deleteEntity = () => {
   if (confirm("Are you sure you want to delete "+nameEl.innerHTML+" and all of its children?")) {
-    socket.emit('delete', { "path": _path, "name": nameEl.innerHTML });
+    socket.emit('delete', { "path": _path, "name": sanitize(nameEl.innerHTML) });
   }
 }
 
@@ -137,7 +137,7 @@ const viewData = (data) => {
 const sanitize = (str) => {
   let safe = str.replace(new RegExp(' ','g'),'_');
   safe = safe.replace(new RegExp('/','g'),'');
-  safe = safe.replace(new RegExp('.','g'),'[period]');
+  safe = safe.replace(/\./g,'[period]');
   return safe;
 }
 
